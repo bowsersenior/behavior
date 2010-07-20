@@ -31,3 +31,27 @@
 #   name: Secret Password for Accessing Secret Areas
 #   default: secret
 #   type: password
+#
+#
+#
+# Sort order
+# By default, the order of the fields is not maintained, so the form may not be organized in the same order as your YAML file
+# If you want the form to present each field in the same order as the YAML file, you have to use YAML's omap type
+#
+# For example, to maintain the order of the fields above, you would use:
+# 
+# --- !omap
+# - site_title:
+#     name: Site Title
+#     default: My Site
+#     type: string
+#   
+# - site_description:
+#     name: Description for Google
+#     default: Lots of Awesomeness Here
+#     type: text
+#   
+# - secret:
+#     name: Secret Password for Accessing Secret Areas
+#     default: secret
+#     type: password

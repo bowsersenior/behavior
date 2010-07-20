@@ -16,11 +16,41 @@ module Behavior
   end
   
   class Base
+    # from: http://avdi.org/devblog/2009/07/14/recursively-symbolize-keys/
+    # this could be added to the Hash or OrderedHash class
+    # but for a plugin it's better not to modify basic classes
+    def symbolize_keys_recursively(hash)
+      hash.inject(hash.class.new){|result, (key, value)|
+        new_key = case key
+                  when String then key.to_sym
+                  else key
+                  end
+        new_value = case value
+                    when (Hash or OrderedHash) then symbolize_keys_recursively(value)
+                    else value
+                    end
+        result[new_key] = new_value
+        result
+      }
+    end
+    
     def meta
-      HashWithIndifferentAccess.new(YAML.load_file(Behavior::Settings.config_file))
+      @meta ||= begin
+        yaml_hash = YAML.load_file(Behavior::Settings.config_file)
+
+        # check if hash order needs to be maintained
+        # TODO: need something like OrderedHashWithIndifferentAccess ?
+        if yaml_hash.is_a? ActiveSupport::OrderedHash
+          symbolize_keys_recursively( yaml_hash )
+        else
+          HashWithIndifferentAccess.new( yaml_hash )
+        end
+      end
     end
     
     def [](key)
+      key = key.intern if key.is_a?(String)
+      
       out = begin
         BehaviorConfig.find_by_key(key.to_s).value
       rescue NoMethodError

@@ -100,6 +100,24 @@ If you want to control how the fields in the admin interface appear, you can add
         - [ Two, 2 ]
         - [ Three, 3 ]
 
+And if you want the form fields to appear in the same order as in your YAML file, you can use YAML's omap type like so:
+
+    --- !omap
+    - site_title:
+        name: Site Title
+        default: My Site
+        type: string
+  
+    - site_description:
+        name: Description for Google
+        default: Lots of Awesomeness Here
+        type: text
+  
+    - secret:
+        name: Secret Password for Accessing Secret Areas
+        default: secret
+        type: password
+
 Running the tests
 =================
 
