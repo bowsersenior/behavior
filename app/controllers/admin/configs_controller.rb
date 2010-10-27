@@ -8,11 +8,11 @@ class Admin::ConfigsController < ApplicationController
   helper :behavior
   
   def show
-    @configs = config.all
+    @configs = behavior_config.all
   end
   
   def update
-    config.update(params[:conf])
+    behavior_config.update(params[:conf])
     flash[:notice] = "Config Changes Saved"
     redirect_to admin_config_path
   end

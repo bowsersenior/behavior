@@ -2,15 +2,15 @@ require 'active_support'
 module Behavior
   def self.included(base)
     base.class_eval do
-      def config
+      def behavior_config
         Behavior::Base.new
       end      
-      helper_method :config if respond_to?(:helper_method)
+      helper_method :behavior_config if respond_to?(:helper_method)
     end
   end
   
   class << self
-    def config
+    def behavior_config
       Behavior::Base.new
     end
   end
@@ -52,7 +52,7 @@ module Behavior
       key = key.intern if key.is_a?(String)
       
       out = begin
-        BehaviorConfig.find_by_key(key.to_s).value
+        BehaviorConfig.retrieve_by_key(key.to_s).value
       rescue NoMethodError
         meta[key][:default]
       end
@@ -72,8 +72,11 @@ module Behavior
     
     def update(attrs = {})
       attrs.each do |key,value|
-        result = BehaviorConfig.find_or_create_by_key(key.to_s)
-        result.update_attribute(:value, value) if result
+        result = BehaviorConfig.retrieve_or_create_by_key(key.to_s)
+        if result
+          result.value = value
+          result.save!
+        end
       end
     end
   end
