@@ -3,7 +3,7 @@ module BehaviorHelper
   def behavior_tag(conf)
     case behavior_config.meta[conf][:type]
     when 'text'
-      text_area_tag("conf[#{conf}]", behavior_config[conf], :id => conf)
+      text_area_tag("conf[#{conf}]", behavior_config[conf], :id => conf, :rows => '', :cols => '')
     when 'password'
       password_field_tag("conf[#{conf}]", behavior_config[conf], :id => conf)
     when 'select'
